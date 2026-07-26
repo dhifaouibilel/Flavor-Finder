@@ -1,0 +1,142 @@
+<%- include("partials/header.ejs") %>
+
+
+<!-- ─── RECIPE HERO ────────────────────────────── -->
+<section class="recipe-hero">
+  <img src="<%= meal.strMealThumb %>" alt="<%= meal.strMeal %>" class="recipe-hero-img" />
+  <div class="recipe-hero-overlay"></div>
+
+  <div class="container recipe-hero-content">
+    <a href="/" class="back-link"><i class="bi bi-arrow-left"></i>Back to recipes</a>
+
+    <div class="recipe-hero-badges">
+      <% if (meal.strCategory) { %>
+        <span class="recipe-category-badge"><%= meal.strCategory %></span>
+      <% } %>
+      <% if (meal.strArea) { %>
+        <span class="recipe-category-badge"><i class="bi bi-geo-alt"></i> <%= meal.strArea %></span>
+      <% } %>
+    </div>
+
+    <h1 class="recipe-hero-title"><%= meal.strMeal %></h1>
+
+    <div class="recipe-hero-meta">
+      <span><i class="bi bi-egg-fried"></i><%= ingredients.length %> ingredients</span>
+      <span><i class="bi bi-list-ol"></i><%= instructions.length %> steps</span>
+      <% if (meal.strTags) { %>
+        <span><i class="bi bi-tags"></i><%= meal.strTags %></span>
+      <% } %>
+    </div>
+
+    <div class="recipe-hero-actions">
+      <button class="fav-btn" style="position:static" id="favBtn" onclick="toggleFav(this)">
+        <i class="bi bi-heart"></i>
+      </button>
+      <a href="/cocktails" class="btn-cocktail-ghost">
+        <i class="bi bi-cup-straw me-1"></i>Pair with a drink
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── RECIPE BODY ────────────────────────────── -->
+<section class="recipe-body">
+  <div class="container">
+    <div class="row g-4">
+
+      <!-- Ingredients -->
+      <div class="col-lg-4">
+        <div class="recipe-card-panel" style="position:sticky; top:90px;">
+          <div class="panel-title"><i class="bi bi-basket"></i>Ingredients</div>
+          <div>
+            <% ingredients.forEach((item, i) => { %>
+              <div class="ingredient-item" onclick="this.classList.toggle('checked')">
+                <div class="ingredient-check"><i class="bi bi-check"></i></div>
+                <div class="ingredient-name"><%= item.ingredient %></div>
+                <div class="ingredient-measure"><%= item.measure %></div>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Instructions -->
+      <div class="col-lg-8">
+        <div class="recipe-card-panel mb-4">
+          <div class="panel-title"><i class="bi bi-journal-text"></i>Instructions</div>
+          <% instructions.forEach((step, i) => { %>
+            <div class="step-item">
+              <div class="step-num"><%= i + 1 %></div>
+              <div class="step-text"><%= step %></div>
+            </div>
+          <% }) %>
+        </div>
+
+        <% if (youtubeEmbed) { %>
+          <div class="recipe-card-panel mb-4">
+            <div class="panel-title"><i class="bi bi-youtube"></i>Watch how it's made</div>
+            <div class="video-wrap">
+              <iframe src="<%= youtubeEmbed %>" title="<%= meal.strMeal %> video" allowfullscreen></iframe>
+            </div>
+          </div>
+        <% } %>
+
+        <% if (tags.length || meal.strSource) { %>
+          <div class="recipe-card-panel d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div class="recipe-tags-row">
+              <% tags.forEach(tag => { %>
+                <span class="recipe-tag"><%= tag %></span>
+              <% }) %>
+            </div>
+            <% if (meal.strSource) { %>
+              <a href="<%= meal.strSource %>" target="_blank" rel="noopener noreferrer" class="recipe-source-link">
+                Original source <i class="bi bi-box-arrow-up-right ms-1"></i>
+              </a>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Related recipes -->
+    <% if (related.length) { %>
+      <div class="row align-items-end mt-5 mb-4">
+        <div class="col">
+          <div class="section-eyebrow">More to explore</div>
+          <h2 class="section-title">You might also <em>like</em></h2>
+          <div class="divider"></div>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <% related.forEach(r => { %>
+          <div class="col-sm-6 col-lg-3">
+            <a href="/recipe/<%= r.idMeal %>" class="recipe-card" style="display:block;text-decoration:none">
+              <div class="recipe-card-img-wrap">
+                <img src="<%= r.strMealThumb %>" alt="<%= r.strMeal %>" class="recipe-card-img" />
+              </div>
+              <div class="recipe-card-body">
+                <div class="recipe-name"><%= r.strMeal %></div>
+                <div class="recipe-footer">
+                  <span class="btn-details">View recipe <i class="bi bi-arrow-right"></i></span>
+                </div>
+              </div>
+            </a>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<script>
+function toggleFav(btn) {
+  btn.classList.toggle('active');
+  const icon = btn.querySelector('i');
+  icon.classList.toggle('bi-heart');
+  icon.classList.toggle('bi-heart-fill');
+  btn.style.color = btn.classList.contains('active') ? '#ff4d6d' : '';
+}
+</script>
+
+<%- include("partials/footer.ejs") %>

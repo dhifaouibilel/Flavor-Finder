@@ -1,0 +1,270 @@
+<%- include("partials/header.ejs") %>
+
+
+<!-- ─── HERO ───────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-overlay"></div>
+
+  <div class="container hero-content">
+    <div class="row align-items-center gy-5">
+
+      <!-- Left -->
+      <div class="col-lg-7">
+        <div class="hero-eyebrow">
+          <i class="bi bi-globe2"></i>
+          Recipes from 50+ countries
+        </div>
+
+        <h1 class="hero-title">
+          Cook the <span class="accent">world</span><br>from your kitchen
+        </h1>
+
+        <p class="hero-sub">
+          Discover thousands of authentic recipes from every corner of the globe.
+          Filter by ingredient, cuisine, or mood — then pair with the perfect drink.
+        </p>
+
+        <!-- Search -->
+        <div class="search-glass">
+          <i class="bi bi-search"></i>
+          <input type="text" id="searchInput" placeholder="Search chicken, pasta, sushi..." onkeydown="if(event.key==='Enter') doSearch()" />
+          <button class="btn-search" onclick="doSearch()">
+            <i class="bi bi-arrow-right me-1"></i>Search
+          </button>
+        </div>
+
+        <!-- Quick tags -->
+        <div class="hero-tags">
+          <span class="hero-tag" onclick="quickSearch('Pasta')">🍝 Pasta</span>
+          <span class="hero-tag" onclick="quickSearch('Chicken')">🍗 Chicken</span>
+          <span class="hero-tag" onclick="quickSearch('Sushi')">🍣 Sushi</span>
+          <span class="hero-tag" onclick="quickSearch('Pizza')">🍕 Pizza</span>
+          <span class="hero-tag" onclick="quickSearch('Curry')">🍛 Curry</span>
+          <span class="hero-tag" onclick="quickSearch('Tacos')">🌮 Tacos</span>
+        </div>
+
+        <!-- Stats -->
+        <div class="hero-stats">
+          <div>
+            <div class="hero-stat-num">5,000+</div>
+            <div class="hero-stat-label">Recipes</div>
+          </div>
+          <div style="width:1px;background:var(--border)"></div>
+          <div>
+            <div class="hero-stat-num">50+</div>
+            <div class="hero-stat-label">Cuisines</div>
+          </div>
+          <div style="width:1px;background:var(--border)"></div>
+          <div>
+            <div class="hero-stat-num">Free</div>
+            <div class="hero-stat-label">Always</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right — Random recipe card -->
+      <div class="col-lg-5 d-none d-lg-block">
+  <div class="hero-recipe-card" id="heroCard">
+    <div class="hero-card-inner">
+      <!-- Image -->
+      <img src="<%= randomMeal.strMealThumb %>" alt="<%= randomMeal.strMeal %>" class="hero-card-img" />
+
+      <!-- Blur overlay at bottom -->
+      <div class="hero-card-blur">
+        <span class="recipe-category-badge"><%= randomMeal.strCategory %></span>
+        <div class="hero-card-title"><%= randomMeal.strMeal %></div>
+        <div class="hero-card-meta">
+          <span><i class="bi bi-geo-alt me-1"></i><%= randomMeal.strArea %></span>
+          <span><i class="bi bi-clock me-1"></i>30 min</span>
+        </div>
+        <div class="hero-card-actions">
+          <a href="/recipe/<%= randomMeal.idMeal %>" class="btn-view">
+            <i class="bi bi-eye me-1"></i>View Recipe
+          </a>
+          <a href="/surprise" class="btn-surprise-sm">
+            <i class="bi bi-shuffle"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<h3></h3>
+
+
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── CATEGORIES ─────────────────────────────── -->
+<section class="section categories-section" id="categories" style="background:var(--bg)">
+  <div class="container">
+    <div class="row align-items-end mb-4">
+      <div class="col">
+        <div class="section-eyebrow">Browse by type</div>
+        <h2 class="section-title">What are you <em>craving?</em></h2>
+        <div class="divider"></div>
+      </div>
+      <div class="col-auto">
+        <a href="/category/Beef" style="font-size:.82rem;color:var(--orange);text-decoration:none">
+          All categories <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+
+    <div class="row g-3" id="categoriesGrid">
+  <% categories.slice(0,5).forEach(cat => { %>
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+      <a href="/category/<%= cat.strCategory %>" class="cat-card">
+        <img
+          src="<%= cat.strCategoryThumb %>"
+          alt="<%= cat.strCategory %>"
+          class="cat-card-img"
+        />
+        <div class="cat-card-blur">
+          <%= cat.strCategory %>
+        </div>
+      </a>
+    </div>
+  <% }) %>
+</div>
+  </div>
+</section>
+
+<!-- ─── FEATURED RECIPES ───────────────────────── -->
+<!-- Ingredient Explorer -->
+<section class="section" style="background:var(--bg2)">
+  <div class="container">
+    <div class="section-eyebrow">What's in your fridge?</div>
+    <h2 class="section-title">Browse by <em>ingredient</em></h2>
+    <div class="divider"></div>
+
+    <div class="row g-3">
+      <% ingredients.slice(0, 12).forEach(ing => { %>
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+          <a href="/ingredient/<%= ing.strIngredient %>" class="ing-card">
+            <img
+              src="https://www.themealdb.com/images/ingredients/<%= ing.strIngredient %>-medium.png"
+              alt="<%= ing.strIngredient %>"
+              class="ing-img"
+            />
+            <div class="ing-name"><%= ing.strIngredient %></div>
+          </a>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<%- include("sections/cocktails.ejs") %>
+
+<!-- ─── COUNTRIES ──────────────────────────────── -->
+<section class="section countries-section" id="countries" style="background:var(--bg2)">
+  <div class="container">
+    <div class="row align-items-end mb-4">
+      <div class="col">
+        <div class="section-eyebrow">World cuisine</div>
+        <h2 class="section-title">Explore by <em>country</em></h2>
+        <div class="divider"></div>
+        <p class="section-sub">Pick a destination and we'll serve up the best dishes from that culture.</p>
+      </div>
+       <div class="col-auto">
+        <a href="/area" style="font-size:.82rem;color:var(--orange);text-decoration:none">
+          all countries<i class="bi bi-arrow-right mt-10"></i>
+        </a>
+      </div>
+    </div>
+    
+    <div class="row g-3" id="countriesGrid">
+      <% areas.slice(0,18).forEach(area => { %>
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+          <a href="/area/<%= area.strArea %>" class="area-card">
+            <div class="area-flag">
+              <%= flagEmoji(area.strCountry) %>
+            </div>
+            <div class="area-info">
+              <div class="area-name"><%= area.strArea %></div>
+              <div class="area-label">
+                <i class="bi bi-grid" style="font-size:0.65rem"></i>
+                Recipes
+              </div>
+            </div>
+            <i class="bi bi-chevron-right area-arrow"></i>
+          </a>
+        </div>
+      <% }) %>
+   
+    </div>
+  </div>
+</section>
+
+<!-- ─── MEAL PLANNER CTA ───────────────────────── -->
+<section class="section" id="planner" style="background:var(--bg)">
+  <div class="container">
+    <div class="planner-cta">
+      <div class="row align-items-center">
+        <div class="col-lg-7">
+          <div class="section-eyebrow">AI-powered (without the AI)</div>
+          <h2 class="planner-cta-title">Plan your week.<br>Eat like a chef.</h2>
+          <p class="planner-cta-sub">
+            Tell us your goal and what's in your fridge. We'll build a 7-day meal plan
+            with recipes matched to your lifestyle — weight loss, muscle gain, or just pure flavor.
+          </p>
+          <a href="#" class="btn-cta-primary">
+            <i class="bi bi-calendar3 me-2"></i>Start meal planning
+          </a>
+          <a href="#" class="btn-cta-ghost">Learn how it works</a>
+        </div>
+        <div class="col-lg-5 d-none d-lg-flex justify-content-end">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;opacity:0.7">
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:.78rem;color:var(--muted)">
+              <div style="font-size:1.2rem;margin-bottom:6px">🥗</div>
+              <div style="color:var(--cream);font-weight:600;margin-bottom:2px">Monday</div>
+              Greek Salad
+            </div>
+            <div style="background:var(--bg3);border:1px solid rgba(255,107,53,0.3);border-radius:10px;padding:12px;font-size:.78rem;color:var(--muted)">
+              <div style="font-size:1.2rem;margin-bottom:6px">🍝</div>
+              <div style="color:var(--cream);font-weight:600;margin-bottom:2px">Tuesday</div>
+              Carbonara
+            </div>
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:.78rem;color:var(--muted)">
+              <div style="font-size:1.2rem;margin-bottom:6px">🍛</div>
+              <div style="color:var(--cream);font-weight:600;margin-bottom:2px">Wednesday</div>
+              Chicken Curry
+            </div>
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:.78rem;color:var(--muted)">
+              <div style="font-size:1.2rem;margin-bottom:6px">🐟</div>
+              <div style="color:var(--cream);font-weight:600;margin-bottom:2px">Thursday</div>
+              Grilled Salmon
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function doSearch() {
+  const term = document.getElementById('searchInput').value.trim();
+  if (!term) return;
+  window.location.href = '/category/' + encodeURIComponent(term);
+}
+
+function quickSearch(term) {
+  window.location.href = '/category/' + encodeURIComponent(term);
+}
+</script>
+
+<!-- ─── FOOTER ─────────────────────────────────── -->
+
+
+
+
+
+
+  
+
+
+<%- include("partials/footer.ejs") %>
