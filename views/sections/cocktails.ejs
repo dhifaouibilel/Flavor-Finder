@@ -1,0 +1,122 @@
+<!-- ─── COCKTAIL SECTION ──────────────── -->
+<section class="section cocktail-section">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="row align-items-end mb-4">
+      <div class="col-lg-6">
+        <div class="section-eyebrow">Pair with your meal</div>
+        <h2 class="section-title">Discover <em>cocktails</em></h2>
+        <div class="divider"></div>
+        <p class="section-sub">
+          From classic shakers to virgin sips — find the perfect drink to go with your recipe.
+        </p>
+      </div>
+      <div class="col-lg-6 d-flex justify-content-lg-end align-items-end mt-3 mt-lg-0">
+        <div class="cocktail-toggle">
+          <button class="toggle-btn active" onclick="switchTab('alcoholic', this)">
+            🍸 Alcoholic
+          </button>
+          <button class="toggle-btn" onclick="switchTab('virgin', this)">
+            🧃 Non-Alcoholic
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Featured random cocktail -->
+    <div class="cocktail-featured">
+      <img
+        src="<%= randomCocktail.strDrinkThumb %>/large"
+        alt="<%= randomCocktail.strDrink %>"
+        class="cocktail-featured-img"
+      />
+      <div class="cocktail-featured-body">
+        <div class="cocktail-featured-label">
+          <i class="bi bi-stars me-1"></i>Cocktail of the day
+        </div>
+        <div class="cocktail-featured-title"><%= randomCocktail.strDrink %></div>
+        <div class="cocktail-featured-actions">
+          <a href="/cocktail/<%= randomCocktail.idDrink %>" class="btn-cocktail-primary">
+            <i class="bi bi-eye"></i> View Recipe
+          </a>
+          <a href="/cocktails" class="btn-cocktail-ghost">
+            Explore all
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid alcoholic -->
+    <div id="tab-alcoholic" class="row g-3">
+      <% cocktails.forEach(c => { %>
+        <div class="col-6 col-md-4 col-lg-2">
+          <a href="/cocktail/<%= c.idDrink %>" class="cocktail-card">
+            <div class="cocktail-img-wrap">
+              <img
+                src="<%= c.strDrinkThumb %>/medium"
+                alt="<%= c.strDrink %>"
+                class="cocktail-img"
+                loading="lazy"
+              />
+              <span class="cocktail-badge badge-alcoholic">🍸 Alcoholic</span>
+            </div>
+            <div class="cocktail-body">
+              <div class="cocktail-name"><%= c.strDrink %></div>
+              <div class="cocktail-footer">
+                <span class="btn-cocktail-details">
+                  View <i class="bi bi-arrow-right"></i>
+                </span>
+              </div>
+            </div>
+          </a>
+        </div>
+      <% }) %>
+    </div>
+
+    <!-- Grid virgin -->
+    <div id="tab-virgin" class="row g-3" style="display:none!important">
+      <% virginCocktails.forEach(c => { %>
+        <div class="col-6 col-md-4 col-lg-2">
+          <a href="/cocktail/<%= c.idDrink %>" class="cocktail-card">
+            <div class="cocktail-img-wrap">
+              <img
+                src="<%= c.strDrinkThumb %>/medium"
+                alt="<%= c.strDrink %>"
+                class="cocktail-img"
+                loading="lazy"
+              />
+              <span class="cocktail-badge badge-virgin">🧃 Virgin</span>
+            </div>
+            <div class="cocktail-body">
+              <div class="cocktail-name"><%= c.strDrink %></div>
+              <div class="cocktail-footer">
+                <span class="btn-cocktail-details">
+                  View <i class="bi bi-arrow-right"></i>
+                </span>
+              </div>
+            </div>
+          </a>
+        </div>
+      <% }) %>
+    </div>
+
+    <!-- CTA -->
+    <div class="text-center mt-4">
+      <a href="/cocktails" style="font-size:.85rem;color:var(--orange);text-decoration:none;font-weight:600">
+        Explore all cocktails <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<script>
+function switchTab(tab, btn) {
+  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  document.getElementById('tab-alcoholic').style.display = tab === 'alcoholic' ? '' : 'none';
+  document.getElementById('tab-virgin').style.display   = tab === 'virgin'    ? '' : 'none';
+}
+</script>

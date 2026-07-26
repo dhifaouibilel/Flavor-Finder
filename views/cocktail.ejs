@@ -1,0 +1,116 @@
+<%- include("partials/header.ejs") %>
+
+<!-- ─── COCKTAIL HERO ──────────────────────────── -->
+<section class="recipe-hero">
+  <img src="<%= drink.strDrinkThumb %>" alt="<%= drink.strDrink %>" class="recipe-hero-img" />
+  <div class="recipe-hero-overlay"></div>
+
+  <div class="container recipe-hero-content">
+    <a href="/cocktails" class="back-link"><i class="bi bi-arrow-left"></i>Back to cocktails</a>
+
+    <div class="recipe-hero-badges">
+      <% if (drink.strCategory) { %>
+        <span class="recipe-category-badge"><%= drink.strCategory %></span>
+      <% } %>
+      <% if (drink.strAlcoholic) { %>
+        <span class="recipe-category-badge"><i class="bi bi-cup-straw"></i> <%= drink.strAlcoholic %></span>
+      <% } %>
+      <% if (drink.strGlass) { %>
+        <span class="recipe-category-badge"><%= drink.strGlass %></span>
+      <% } %>
+    </div>
+
+    <h1 class="recipe-hero-title"><%= drink.strDrink %></h1>
+
+    <div class="recipe-hero-meta">
+      <span><i class="bi bi-basket"></i><%= ingredients.length %> ingredients</span>
+      <% if (drink.strTags) { %>
+        <span><i class="bi bi-tags"></i><%= drink.strTags %></span>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<!-- ─── COCKTAIL BODY ──────────────────────────── -->
+<section class="recipe-body">
+  <div class="container">
+    <div class="row g-4">
+
+      <!-- Ingredients -->
+      <div class="col-lg-4">
+        <div class="recipe-card-panel" style="position:sticky; top:90px;">
+          <div class="panel-title"><i class="bi bi-basket"></i>Ingredients</div>
+          <div>
+            <% ingredients.forEach(item => { %>
+              <div class="ingredient-item" onclick="this.classList.toggle('checked')">
+                <div class="ingredient-check"><i class="bi bi-check"></i></div>
+                <div class="ingredient-name"><%= item.ingredient %></div>
+                <div class="ingredient-measure"><%= item.measure %></div>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Instructions -->
+      <div class="col-lg-8">
+        <div class="recipe-card-panel mb-4">
+          <div class="panel-title"><i class="bi bi-journal-text"></i>Instructions</div>
+          <p class="step-text" style="padding-top:0">
+            <%= drink.strInstructions %>
+          </p>
+        </div>
+
+        <% if (youtubeEmbed) { %>
+          <div class="recipe-card-panel mb-4">
+            <div class="panel-title"><i class="bi bi-youtube"></i>Watch how it's made</div>
+            <div class="video-wrap">
+              <iframe src="<%= youtubeEmbed %>" title="<%= drink.strDrink %> video" allowfullscreen></iframe>
+            </div>
+          </div>
+        <% } %>
+
+        <% if (tags.length) { %>
+          <div class="recipe-card-panel">
+            <div class="recipe-tags-row">
+              <% tags.forEach(tag => { %>
+                <span class="recipe-tag"><%= tag %></span>
+              <% }) %>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Related cocktails -->
+    <% if (related.length) { %>
+      <div class="row align-items-end mt-5 mb-4">
+        <div class="col">
+          <div class="section-eyebrow">More to explore</div>
+          <h2 class="section-title">You might also <em>like</em></h2>
+          <div class="divider"></div>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <% related.forEach(d => { %>
+          <div class="col-sm-6 col-lg-3">
+            <a href="/cocktail/<%= d.idDrink %>" class="recipe-card" style="display:block;text-decoration:none">
+              <div class="recipe-card-img-wrap">
+                <img src="<%= d.strDrinkThumb %>" alt="<%= d.strDrink %>" class="recipe-card-img" />
+              </div>
+              <div class="recipe-card-body">
+                <div class="recipe-name"><%= d.strDrink %></div>
+                <div class="recipe-footer">
+                  <span class="btn-details">View recipe <i class="bi bi-arrow-right"></i></span>
+                </div>
+              </div>
+            </a>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include("partials/footer.ejs") %>

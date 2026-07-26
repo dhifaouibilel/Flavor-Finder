@@ -1,0 +1,118 @@
+<%- include("partials/header.ejs") %>
+
+<!-- ─── INGREDIENT HERO ────────────────────────── -->
+<section class="category-hero">
+  <div class="category-hero-glow"></div>
+  <div class="container">
+    <a href="/" class="back-link"><i class="bi bi-arrow-left"></i>Back to home</a>
+
+    <div class="category-hero-content">
+      <img
+        src="https://www.themealdb.com/images/ingredients/<%= name %>-medium.png"
+        alt="<%= name %>"
+        class="category-hero-thumb"
+      />
+      <div>
+        <h1 class="category-hero-title"><%= name %></h1>
+        <p class="category-hero-desc">
+          <% if (ingredient && ingredient.strDescription) { %>
+            <%= ingredient.strDescription.split('.').slice(0, 2).join('.') %>.
+          <% } else if (ingredient) { %>
+            No description available yet for <%= name %> — but here's what you can make with it.
+          <% } else { %>
+            We couldn't find an exact ingredient called "<%= name %>". Try one of the suggestions below.
+          <% } %>
+        </p>
+        <div class="category-hero-count">
+          <i class="bi bi-egg-fried"></i><%= meals.length %> recipe<%= meals.length === 1 ? '' : 's' %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ingredient search -->
+    <div class="search-glass" style="max-width:540px;margin-top:26px">
+      <i class="bi bi-search"></i>
+      <input
+        type="text"
+        id="ingredientSearch"
+        placeholder="Search an ingredient e.g. chicken, garlic, basil..."
+        onkeydown="if(event.key==='Enter') searchIngredient()"
+      />
+      <button class="btn-search" onclick="searchIngredient()">
+        <i class="bi bi-arrow-right me-1"></i>Search
+      </button>
+    </div>
+
+    <!-- Suggestions -->
+    <p class="ingredient-hint">
+      <% if (noExactMatch) { %>
+        <i class="bi bi-lightbulb"></i> Did you mean one of these?
+      <% } else { %>
+        Or try another ingredient
+      <% } %>
+    </p>
+    <div class="ingredient-suggestions">
+      <% suggestions.forEach(s => { %>
+        <a href="/ingredient/<%= s.strIngredient %>" class="ingredient-chip">
+          <img
+            src="https://www.themealdb.com/images/ingredients/<%= s.strIngredient %>-small.png"
+            alt="<%= s.strIngredient %>"
+          />
+          <%= s.strIngredient %>
+        </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- ─── MEALS WITH THIS INGREDIENT ─────────────── -->
+<section class="section" style="background:var(--bg)">
+  <div class="container">
+    <div class="row align-items-end mb-4">
+      <div class="col">
+        <div class="section-eyebrow">Made with <%= name %></div>
+        <h2 class="section-title">Recipes using this <em>ingredient</em></h2>
+        <div class="divider"></div>
+      </div>
+    </div>
+
+    <% if (meals.length) { %>
+      <div class="row g-4">
+        <% meals.forEach(meal => { %>
+          <div class="col-sm-6 col-lg-3">
+            <a href="/recipe/<%= meal.idMeal %>" class="recipe-card" style="display:block;text-decoration:none">
+              <div class="recipe-card-img-wrap">
+                <img src="<%= meal.strMealThumb %>" alt="<%= meal.strMeal %>" class="recipe-card-img" loading="lazy" />
+              </div>
+              <div class="recipe-card-body">
+                <div class="recipe-name"><%= meal.strMeal %></div>
+                <div class="recipe-footer">
+                  <span class="btn-details">View recipe <i class="bi bi-arrow-right"></i></span>
+                </div>
+              </div>
+            </a>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="category-empty">
+        <i class="bi bi-emoji-frown"></i>
+        <% if (noExactMatch) { %>
+          <p>No exact ingredient match for "<%= name %>" — try one of the suggestions above.</p>
+        <% } else { %>
+          <p>No recipes found with "<%= name %>".</p>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<script>
+function searchIngredient() {
+  const term = document.getElementById('ingredientSearch').value.trim();
+  if (!term) return;
+  window.location.href = '/ingredient/' + encodeURIComponent(term);
+}
+</script>
+
+<%- include("partials/footer.ejs") %>

@@ -1,0 +1,147 @@
+<%- include("partials/header.ejs") %>
+
+<!-- ─── COCKTAILS HERO ─────────────────────────── -->
+<section class="category-hero">
+  <div class="category-hero-glow"></div>
+  <div class="container">
+    <a href="/" class="back-link"><i class="bi bi-arrow-left"></i>Back to home</a>
+
+    <div class="category-hero-content">
+      <div class="category-hero-thumb area-hero-flag">🍸</div>
+      <div>
+        <h1 class="category-hero-title">All cocktails</h1>
+        <p class="category-hero-desc">Search a cocktail by name, or browse alcoholic and non-alcoholic drinks.</p>
+      </div>
+    </div>
+
+    <form class="search-glass" style="max-width:540px;margin-top:26px" method="GET" action="/cocktails">
+      <i class="bi bi-search"></i>
+      <input
+        type="text"
+        name="q"
+        value="<%= q %>"
+        placeholder="Search a cocktail e.g. Mojito, Margarita, Daiquiri..."
+      />
+      <button class="btn-search" type="submit">
+        <i class="bi bi-arrow-right me-1"></i>Search
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- ─── COCKTAILS BODY ─────────────────────────── -->
+<section class="section cocktail-section" style="background:var(--bg)">
+  <div class="container">
+
+    <% if (searchResults) { %>
+
+      <div class="row align-items-end mb-4">
+        <div class="col">
+          <div class="section-eyebrow">Search results</div>
+          <h2 class="section-title">Results for "<%= q %>"</h2>
+          <div class="divider"></div>
+        </div>
+      </div>
+
+      <% if (searchResults.length) { %>
+        <div class="row g-3">
+          <% searchResults.forEach(c => { %>
+            <div class="col-6 col-md-4 col-lg-2">
+              <a href="/cocktail/<%= c.idDrink %>" class="cocktail-card">
+                <div class="cocktail-img-wrap">
+                  <img src="<%= c.strDrinkThumb %>/medium" alt="<%= c.strDrink %>" class="cocktail-img" loading="lazy" />
+                  <span class="cocktail-badge <%= c.strAlcoholic === 'Alcoholic' ? 'badge-alcoholic' : 'badge-virgin' %>">
+                    <%= c.strAlcoholic === 'Alcoholic' ? '🍸 Alcoholic' : '🧃 Virgin' %>
+                  </span>
+                </div>
+                <div class="cocktail-body">
+                  <div class="cocktail-name"><%= c.strDrink %></div>
+                  <div class="cocktail-footer">
+                    <span class="btn-cocktail-details">View <i class="bi bi-arrow-right"></i></span>
+                  </div>
+                </div>
+              </a>
+            </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <div class="category-empty">
+          <i class="bi bi-emoji-frown"></i>
+          <p>No cocktails found for "<%= q %>".</p>
+        </div>
+      <% } %>
+
+      <div class="text-center mt-4">
+        <a href="/cocktails" style="font-size:.85rem;color:var(--orange);text-decoration:none;font-weight:600">
+          <i class="bi bi-arrow-left me-1"></i>Back to browse all
+        </a>
+      </div>
+
+    <% } else { %>
+
+      <div class="row align-items-end mb-4">
+        <div class="col-lg-6">
+          <div class="section-eyebrow">Browse</div>
+          <h2 class="section-title">All <em>cocktails</em></h2>
+          <div class="divider"></div>
+        </div>
+        <div class="col-lg-6 d-flex justify-content-lg-end align-items-end mt-3 mt-lg-0">
+          <div class="cocktail-toggle">
+            <button class="toggle-btn active" onclick="switchTab('alcoholic', this)">🍸 Alcoholic</button>
+            <button class="toggle-btn" onclick="switchTab('virgin', this)">🧃 Non-Alcoholic</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-alcoholic" class="row g-3">
+        <% cocktails.forEach(c => { %>
+          <div class="col-6 col-md-4 col-lg-2">
+            <a href="/cocktail/<%= c.idDrink %>" class="cocktail-card">
+              <div class="cocktail-img-wrap">
+                <img src="<%= c.strDrinkThumb %>/medium" alt="<%= c.strDrink %>" class="cocktail-img" loading="lazy" />
+                <span class="cocktail-badge badge-alcoholic">🍸 Alcoholic</span>
+              </div>
+              <div class="cocktail-body">
+                <div class="cocktail-name"><%= c.strDrink %></div>
+                <div class="cocktail-footer">
+                  <span class="btn-cocktail-details">View <i class="bi bi-arrow-right"></i></span>
+                </div>
+              </div>
+            </a>
+          </div>
+        <% }) %>
+      </div>
+
+      <div id="tab-virgin" class="row g-3" style="display:none!important">
+        <% virginCocktails.forEach(c => { %>
+          <div class="col-6 col-md-4 col-lg-2">
+            <a href="/cocktail/<%= c.idDrink %>" class="cocktail-card">
+              <div class="cocktail-img-wrap">
+                <img src="<%= c.strDrinkThumb %>/medium" alt="<%= c.strDrink %>" class="cocktail-img" loading="lazy" />
+                <span class="cocktail-badge badge-virgin">🧃 Virgin</span>
+              </div>
+              <div class="cocktail-body">
+                <div class="cocktail-name"><%= c.strDrink %></div>
+                <div class="cocktail-footer">
+                  <span class="btn-cocktail-details">View <i class="bi bi-arrow-right"></i></span>
+                </div>
+              </div>
+            </a>
+          </div>
+        <% }) %>
+      </div>
+
+    <% } %>
+  </div>
+</section>
+
+<script>
+function switchTab(tab, btn) {
+  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-alcoholic').style.display = tab === 'alcoholic' ? '' : 'none';
+  document.getElementById('tab-virgin').style.display = tab === 'virgin' ? '' : 'none';
+}
+</script>
+
+<%- include("partials/footer.ejs") %>

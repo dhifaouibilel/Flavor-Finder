@@ -1,0 +1,71 @@
+<%- include("partials/header.ejs") %>
+
+<!-- ─── CATEGORY HERO ──────────────────────────── -->
+<section class="category-hero">
+  <div class="category-hero-glow"></div>
+  <div class="container">
+    <a href="/" class="back-link"><i class="bi bi-arrow-left"></i>Back to home</a>
+
+    <div class="category-hero-content">
+      <% if (category && category.strCategoryThumb) { %>
+        <img src="<%= category.strCategoryThumb %>" alt="<%= name %>" class="category-hero-thumb" />
+      <% } %>
+      <div>
+        <% if (category) { %>
+          <h1 class="category-hero-title"><%= name %> recipes</h1>
+          <% if (category.strCategoryDescription) { %>
+            <p class="category-hero-desc"><%= category.strCategoryDescription.split('.').slice(0, 2).join('.') %>.</p>
+          <% } %>
+        <% } else { %>
+          <h1 class="category-hero-title">Search results for "<%= name %>"</h1>
+          <p class="category-hero-desc">Here's what we found matching your search.</p>
+        <% } %>
+        <div class="category-hero-count">
+          <i class="bi bi-egg-fried"></i><%= meals.length %> recipe<%= meals.length === 1 ? '' : 's' %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick category switch -->
+    <div class="category-pill-nav">
+      <% categories.forEach(cat => { %>
+        <a
+          href="/category/<%= cat.strCategory %>"
+          class="category-pill <%= cat.strCategory.toLowerCase() === name.toLowerCase() ? 'active' : '' %>"
+        ><%= cat.strCategory %></a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- ─── RECIPE GRID ────────────────────────────── -->
+<section class="section" style="background:var(--bg)">
+  <div class="container">
+    <% if (meals.length) { %>
+      <div class="row g-4">
+        <% meals.forEach(meal => { %>
+          <div class="col-sm-6 col-lg-3">
+            <a href="/recipe/<%= meal.idMeal %>" class="recipe-card" style="display:block;text-decoration:none">
+              <div class="recipe-card-img-wrap">
+                <img src="<%= meal.strMealThumb %>" alt="<%= meal.strMeal %>" class="recipe-card-img" loading="lazy" />
+              </div>
+              <div class="recipe-card-body">
+                <div class="recipe-name"><%= meal.strMeal %></div>
+                <div class="recipe-footer">
+                  <span class="btn-details">View recipe <i class="bi bi-arrow-right"></i></span>
+                </div>
+              </div>
+            </a>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="category-empty">
+        <i class="bi bi-emoji-frown"></i>
+        <p>No recipes found for "<%= name %>".</p>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include("partials/footer.ejs") %>

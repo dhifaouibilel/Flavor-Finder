@@ -1,0 +1,119 @@
+<%- include("partials/header.ejs") %>
+
+<!-- ─── AREA HERO ──────────────────────────────── -->
+<section class="category-hero">
+  <div class="category-hero-glow"></div>
+  <div class="container">
+    <a href="/" class="back-link"><i class="bi bi-arrow-left"></i>Back to home</a>
+
+    <div class="category-hero-content">
+      <div class="category-hero-thumb area-hero-flag">
+        <%= area ? flagEmoji(area.strCountry) : '🌍' %>
+      </div>
+      <div>
+        <h1 class="category-hero-title"><%= noSelection ? 'All countries' : name + ' cuisine' %></h1>
+        <p class="category-hero-desc">
+          <% if (noSelection) { %>
+            Pick a country below to explore its traditional recipes.
+          <% } else if (area) { %>
+            Traditional recipes from <%= area.strCountry %>.
+          <% } else { %>
+            We couldn't find an exact country or cuisine called "<%= name %>". Try one of the suggestions below.
+          <% } %>
+        </p>
+        <% if (!noSelection) { %>
+          <div class="category-hero-count">
+            <i class="bi bi-egg-fried"></i><%= meals.length %> recipe<%= meals.length === 1 ? '' : 's' %>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Country search -->
+    <div class="search-glass" style="max-width:540px;margin-top:26px">
+      <i class="bi bi-search"></i>
+      <input
+        type="text"
+        id="areaSearch"
+        placeholder="Search a country e.g. Italian, Mexican, Japanese..."
+        onkeydown="if(event.key==='Enter') searchArea()"
+      />
+      <button class="btn-search" onclick="searchArea()">
+        <i class="bi bi-arrow-right me-1"></i>Search
+      </button>
+    </div>
+
+    <!-- Suggestions -->
+    <p class="ingredient-hint">
+      <% if (noSelection) { %>
+        Browse all countries
+      <% } else if (noExactMatch) { %>
+        <i class="bi bi-lightbulb"></i> Did you mean one of these?
+      <% } else { %>
+        Or try another country
+      <% } %>
+    </p>
+    <div class="ingredient-suggestions">
+      <% suggestions.forEach(s => { %>
+        <a href="/area/<%= s.strArea %>" class="ingredient-chip">
+          <span class="chip-flag"><%= flagEmoji(s.strCountry) %></span>
+          <%= s.strArea %>
+        </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- ─── MEALS FROM THIS COUNTRY ─────────────────── -->
+<% if (!noSelection) { %>
+  <section class="section" style="background:var(--bg)">
+    <div class="container">
+      <div class="row align-items-end mb-4">
+        <div class="col">
+          <div class="section-eyebrow">From <%= name %></div>
+          <h2 class="section-title">Recipes from this <em>country</em></h2>
+          <div class="divider"></div>
+        </div>
+      </div>
+
+      <% if (meals.length) { %>
+        <div class="row g-4">
+          <% meals.forEach(meal => { %>
+            <div class="col-sm-6 col-lg-3">
+              <a href="/recipe/<%= meal.idMeal %>" class="recipe-card" style="display:block;text-decoration:none">
+                <div class="recipe-card-img-wrap">
+                  <img src="<%= meal.strMealThumb %>" alt="<%= meal.strMeal %>" class="recipe-card-img" loading="lazy" />
+                </div>
+                <div class="recipe-card-body">
+                  <div class="recipe-name"><%= meal.strMeal %></div>
+                  <div class="recipe-footer">
+                    <span class="btn-details">View recipe <i class="bi bi-arrow-right"></i></span>
+                  </div>
+                </div>
+              </a>
+            </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <div class="category-empty">
+          <i class="bi bi-emoji-frown"></i>
+          <% if (noExactMatch) { %>
+            <p>No exact country match for "<%= name %>" — try one of the suggestions above.</p>
+          <% } else { %>
+            <p>No recipes found from "<%= name %>".</p>
+          <% } %>
+        </div>
+      <% } %>
+    </div>
+  </section>
+<% } %>
+
+<script>
+function searchArea() {
+  const term = document.getElementById('areaSearch').value.trim();
+  if (!term) return;
+  window.location.href = '/area/' + encodeURIComponent(term);
+}
+</script>
+
+<%- include("partials/footer.ejs") %>
